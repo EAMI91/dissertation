@@ -1,0 +1,388 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Methods},
+  pdfauthor={Emilio Akira Morones Ishikawa},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{physics}
+\usepackage{float}
+\usepackage[]{natbib}
+\bibliographystyle{plainnat}
+
+\title{Methods}
+\author{Emilio Akira Morones Ishikawa}
+\date{7/22/2020}
+
+\begin{document}
+\maketitle
+
+Survival analysis is an inferential technique that aims to model the
+time it takes for an event to occur between two events called
+\emph{start time} and \emph{end time}. Although it is not related to any
+particular event (which is why its application is multiple), the purpose
+of this dissertation is to treat it within the clinical context: that
+is, we will analyze the time necessary, depending on the disease, a
+patient in some cases relapse. There is a possibility that not all
+patients will relapse, so we will say that the patient cured.
+
+These methods are mostly rooted in two main formulations: standard (mix)
+model with cure rate from \citet{Berkson1952} and an alternative model
+(proportional risk) with cure rate from \citet{Hoang1996a}. It was then
+studied by \citet{Chen1999a} in the Bayesian context. The standard model
+with cure rate \citep{Berkson1952} is a mix of survival functions
+defined by:
+
+\begin{align} \label{mixS}
+S_{pop}(t)=\pi+(1-\pi)S(t)
+\end{align}
+
+where \(\pi \in (0,1)\) and \(S (t)\) have the characteristics of a
+survival function. \(S_ {pop} (t)\) is a mix between a survival function
+that is always worth 1 and another that decays to zero, \(S (t)\)and the
+probability of belonging to one and the other is \(\pi\) and
+\(1 - \pi\). Note that \(\lim \limits_{t \to 0} S_{pop} (t) = 1\) and
+\(\lim \limits_{t \to \infty} S_ {pop} (t) = \pi> 0\), therefore
+\(S_ {pop} (t)\) is an improper survival function. If we ignore the
+impropriety of \(S_ {pop} (t)\) and continue with the traditional
+relationship between a survival function and the cumulative risk
+function, we have
+
+\[
+H_{pop}(t)=-\log{S_{pop}(t)}=-\log\{\pi+(1-\pi)S(t)\}
+\]
+
+which satisfies that \(\lim \limits_{t \to0} H_{pop} (t) = 0\) and
+\(\lim \limits_{t \to \infty} H_{pop} (t) = - \log {\pi }> 0\). If we
+proceed and calculate the first derivative, then the risk rate is
+
+\[
+h_{pop}(t) = \dv{}{t}H_{pop}(t)=\frac{(1-\pi)f(t)}{\pi+(1-\pi)S(t)}
+\]
+
+where \(f (t)\) is the density function corresponding to \(S (t)\). The
+properties of \(h_{pop} (t)\) are as follows:
+\(\lim \limits_{t \to 0} h_{pop} (t) = (1- \pi) f (0)\) and
+\(\lim \limits_{t \to \infty} h_{pop} (t) = 0\).
+
+The alternative model with the cure rate of \citet{Hoang1996a} is
+defined by
+
+\begin{align} \label{supalter}
+S_{pop}(t)=\exp\{-\theta F(t)\}
+\end{align}
+
+where \(\theta > 0\) and \(F (t)\) is a cumulative distribution. This
+model satisfies the conditions
+\(\lim \limits_{t \to 0} S_{pop} (t) = 1\) and
+\(\lim \limits_{t \to \infty} S_{pop} (t) = e^{-\theta}\), therefore
+\(S_ {pop} (t)\) is not a survival function per se. What it means is
+that the density function associated with the cure model integrates
+\(e^{- \theta}\) from the cure time to infinity, that is,
+\(\int_s ^ \infty f (t) dt = e^{- \theta}\).
+
+Figures \ref{fig:compsuper} and \ref{fig:comparativo} show the survival
+and risk functions, respectively, with and without the cure threshold of
+\citet{Hoang1996a} for the Weibull distribution. So
+\(S(x) = \exp (-\lambda x \alpha)\) and
+\(h (t) = \alpha \lambda t^{\alpha - 1}\) with \(\lambda > 0\),
+\(\alpha > 0\).
+
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{methods_files/figure-latex/compsuper-1} \caption{Comparison of Weibull survival functions with cure threshold}\label{fig:compsuper}
+\end{figure}
+
+In Figure \ref{fig:compsuper}, the solid black line represents the
+Weibull survival function for \(\lambda = 0.00208\) and \(\alpha = 3\),
+the solid red line represents the Weibull survival function with rate
+\citet{Hoang1996a} cure with the same parameters. The dotted black line
+represents \(\lim_{t \to \infty} S_{pop} (t) = e^{-.9}\). What it
+implies is that the individual will not present the failure.
+
+Despite being improper, the accumulated risk function is
+
+\[
+H_{pop}(t)=-\log S_{pop}(t)=\theta F(t)
+\]
+
+which takes us to \(\lim_{t \to 0} H_{pop} (t) = 0\) and
+\(\lim_ {t \to \infty} H_ {pop} (t) = \theta> 0\), if we take the first
+derivative then the risk rate is
+
+\[
+h_{pop}(t)=\dv{}{t}H_{pop}(t)=\theta f(t)
+\]
+
+where \(f (t)\) is the density function that corresponds to \(F (t)\).
+We have that \(\lim \limits_{t \to 0} h_ {pop} (t) = \theta f (0)\) and
+\(\lim \limits_{t \to \infty} h_{pop} (t) = 0\).
+
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{methods_files/figure-latex/comparativo-1} \caption{Comparison of Weibull risk function with cure threshold}\label{fig:comparativo}
+\end{figure}
+
+In Figure \ref{fig: comparativo}, the solid black line represents the
+Weibull risk function for \(\lambda = 0.00208\) and \(\alpha = 3\). The
+solid red line represents the Weibull risk function with the cure rate
+of \citet{Hoang1996a} with the same parameters. It implies that from a
+point in time, the risk rate decreases until it reaches zero.
+
+The semi-parametric model of the cure rate usually focuses on modeling
+the risk rate function \(h (t)\) of the group that is not cured,
+corresponding to \(S (t)\) in the equation \eqref{mixS} and \(F(t)\) in
+\eqref{supalter}. \citet{Tsodikov2003a} proposed a piecewise constant
+risk function in the model for uncured individuals,
+
+\begin{align} \label{risk}
+h(t)=\sum_{j=1}^J\lambda_j I(s_{j-1}< t \leq s_j)
+\end{align}
+
+where \(0 <s_1 <\dots <s_J\) with \(s_J> t_i\) for \(i = 1, \dots, n\).
+The number \(J\) controls the degree of flexibility of the model. If
+\(J = 1\) , \(h (t)\) is a constant risk rate and the larger \(J\) is,
+the more flexible the model becomes.
+
+In all models of cure in the literature, the researchers model a
+positive probability of cure. However, they do not explicitly quantify
+the finite cure time. \citet{Nieto-Barajas2008} proposed a new cure rate
+model that allows a separation of the cured group of the uncured by
+explicitly modelling the finite cure threshold. For this purpose, they
+define a risk rate with a cure threshold for the entire population,
+including cured and uncured individuals. A mixed gamma process
+establishes the initial nonparametric distribution for the risk rates. A
+mixture between a gamma distribution and a point of mass zero defines
+the marginal distribution in each partition. In particular, the new
+model allows determining the specific threshold to considerate an
+individual cured.
+
+\hypertarget{model-with-cure-threshold}{%
+\subsection{\texorpdfstring{Model with cure threshold
+\label{cap:mod_cura}}{Model with cure threshold }}\label{model-with-cure-threshold}}
+
+The conditions that require a risk function of the entire population, in
+the cure models mentioned above, are that they satisfy the following:
+
+\begin{itemize} 
+\item $\lim\limits_{t\to0}H_{pop}(t)=0$
+\item $\lim\limits_{t\to\infty}H_{pop}(t)= c < \infty$
+\end{itemize}
+
+If we define \(h_{pop} = \dv{} {t} H_{pop} (t)\), for these conditions
+to be fulfilled it is necessary that
+\(\lim \limits_{t \to \infty} h_{pop} (t) = 0\).
+
+After enough time, uncured individuals will experience the event, while
+the cured will either be censored or remain alive in the study. That is,
+after the cure threshold of the remaining individuals in the study is no
+longer at risk of experiencing the event. Following this route,
+\citet{Nieto-Barajas2008} propose a new cure model for the risk function
+of the entire population that disappears when \(t\) exceeds a certain
+threshold, \(\tau\):
+
+\begin{align} \label{modelnieto}
+h_{pop}(t)=h(t)I(t\leq\tau)
+\end{align}
+
+with \(h(t)\) a non-negative function. This new specification of the
+risk function can be interpreted as a mixed cure model as in
+\eqref{mixS} or a proportional cure model \eqref{supalter} limiting the
+event time of the uncured group, \(T^u\) , on the right with the
+threshold \(\tau\), \(Pr (T^u \leq \tau) = 1\). In practice, it is more
+realistic to determine that the risk rate falls to zero after the cure
+threshold since the risk of individuals who have survived to time
+\(\tau\) becomes nil. The \eqref{modelnieto} model defines a cure model
+that allows identifying the two groups, cured and uncured completely. In
+the Bayesian context, \citet{Nieto-Barajas2008} define a nonparametric
+initial distribution.
+
+\[
+h(t)=\sum_{k=1}^\infty \lambda_k I(\tau_{k-1}<t\leq \tau_k)
+\]
+
+where \(0 = \tau_0 <\tau_1 <\dots\) form a partition on the time axis
+and \(\{\lambda_k\}\) is an independent range process for time,
+i.e.~\(\lambda_k {\sim} Ga (\alpha_k, \beta_k)\) denotes a Gamma
+distribution with mean \(\frac{\alpha_k}{\beta_k}\). Although this model
+is defined with an infinite number of intervals, in practice it is
+limited to a finite number. If we combine this process and the
+constrained model \eqref{modelnieto}, the cure time \(\tau\) can only
+occur in discrete periods, which can be estimated with a fine preference
+partition to obtain greater flexibility in the model. Denoting
+\(\tau_z\) as the discretized cure time, then the condition
+\(t \leq \tau_z\) can be replaced by \(k \leq z\), and then the initial
+distribution of the entire population is
+
+\begin{align}\label{apriori}
+h_{pop}(t)=\sum_{k=1}^\infty \lambda_k I(k\leq z)I(\tau_{k-1}<t\leq\tau_k)
+\end{align}
+
+Furthermore, we can take an initial distribution for \(\tau_z\)
+considering one for \(z\). If we denote the initial distribution for
+\(z\) as \(f(z)\), then the new process \(\{\lambda_k^*\}\) with
+\(\lambda_k^* = \lambda_k I (k \leq z)\), is characterized by
+
+\[
+f(\lambda_k^*\mid z) = Ga(\lambda_k^* \mid \alpha_k,\beta_k)I(k\leq z)+I(\lambda_k^*=0)I(k>z)
+\]
+
+Marginalizing over \(z\), the initial distribution of \(\lambda_k^*\)
+becomes
+
+\[
+f(\lambda_k^*) = \eta_k Ga(\lambda_k^* \mid \alpha_k,\beta_k) + (1-\eta_k)I(\lambda_k^*=0)
+\]
+
+with \(\eta_k = Pr(z \geq k)\), i.e.~\(\lambda_k^*\) has a prior
+distribution given by mixing a gamma distribution and a point of mass at
+zero \(1- \eta_k\).
+
+The first and second moment of the process, \(\{\lambda_k^*\}\) are the
+following:
+
+\[
+E(\lambda_k^*)=\eta_k\bigg(\frac{\alpha_k}{\beta_k}\bigg) \quad
+Var(\lambda_k^*)=\eta_k(1-\eta_k)\bigg(\frac{\alpha_k}{\beta_k}\bigg)^2+\eta_k\bigg(\frac{\alpha_k}{\beta_k^2}\bigg).
+\]
+
+Due to the existence of \(z\), \(\lambda_k^*\) and \(\lambda_{k + 1}^*\)
+are not independent, and the covariance is given by
+
+\[
+Cov(\lambda_{k+1}^*,\lambda_k^*) = \eta_{k+1}(1-\eta_k)\bigg(\frac{\alpha_{k+1}}{\beta_{k+1}}\bigg)\bigg(\frac{\alpha_{k}}{\beta_{k}}\bigg).
+\]
+
+It is important to note that the equation \eqref{modelnieto} allows
+modelling non-parametrically the risk rates for the entire population,
+while other model constructs for the cure rate model the cure rate for
+uncured individuals. If \(\eta_k = 1\), the time in interval \(k\)
+occurs before cure index \(z\),
+
+\[
+E(\lambda_k^*)=\frac{\alpha_k}{\beta_k} \quad
+Var(\lambda_k^*)=\frac{\alpha_k}{\beta_k^2} \quad
+Cov(\lambda_{k+1}^*,\lambda_k^*) =0
+\]
+
+Therefore it is reduced to the independent exponential model by
+intervals.
+
+It is convenient to add a dependency process between the risk rates of
+consecutive intervals to reduce the possibility of abrupt changes in the
+estimate.
+
+To consider greater dependency on the \$\{\lambda\_k\} \$ process, we
+take the Markov gamma process proposed by @ Nieto-Barajas2002a for the
+\(\lambda_k\) 's. The Markov gamma process definition is through a
+latent process \(\{u_k\}\) as follows. The steps are the following.
+
+\begin{enumerate}
+\item $\lambda_1 \sim Ga(\alpha_1,\beta_1)$
+\item $u_k \mid \lambda_k \sim Po(c_k \lambda_k)$
+\item $\lambda_{k+1}|u_k \sim Ga(\alpha_{k+1}+u_k,\beta_{k+1} + c_k)$
+\end{enumerate}
+
+for \(k = 1,2, \dots\). Here, \(Po(c)\) denotes a Poisson distribution
+with intensity \(c\). If \(\alpha_k\) and \(\beta_k\) are taken as
+constants, then the process \$\{~lambda\_k \} \$ is stationary with
+marginal \(\lambda_k \sim Ga(\alpha, \beta)\), with correlation
+\(Corr(\lambda_{k + 1}, \lambda_k) = \frac{c_k}{\beta + c_k}\).
+
+If \(z \ geq k\) \(\forall k\) with probability 1, there is no finite
+cure time, the initial \eqref{apriori} is reduced to the case
+\citet{Nieto-Barajas2002a}, If \(c_k = 0\) \(\forall k\), then
+\(u_k = 0\) with probability 1, this implies that \(\{\lambda_k^*\}\) is
+reduced to the case where the dependency is low.
+
+The equation \eqref{apriori} implies that the cure fraction \(\pi\),
+defined as the proportion of the population that will never experience
+failure, is given by
+
+\[
+\pi=\lim\limits_{t\to\infty}S_{pop}(t)=\exp\bigg\{-\sum_{k=1}^z \lambda_k(\tau_k-\tau_{k-1})\bigg\},
+\]
+
+Since \(\lambda_k = 0\) when \(k> z\) and, by definition, the risk is
+null when the individual survives the healing time, the sum in the
+expression \(\pi\) is a finite sum bounded by \(z\).
+
+A pre-distribution is specified for \(z\), supported at
+\(\{1,2, \dots \}\). The natural option is to consider a positive
+Poisson distribution, \(z \sim Po^+ (\mu)\), for \(\mu> 0\),
+i.e.~\(x-1 \sim Po (\mu)\). Although all the paths of the previous risk
+function, \(h_{pop}(t)\), are piecemeal constant, the paths of the
+corresponding cumulative risk function, \(H_{pop} (t)\), are continue
+with probability 1. So, the nonparametric previous,
+\(S_{pop} (t) = e^{- H_{pop} (t)}\), assigns a positive probability for
+the set of continuous survival functions, this allows a finite healing
+time.
+
+\hypertarget{posterior-analisis}{%
+\section{Posterior analisis}\label{posterior-analisis}}
+
+\hypertarget{description-of-the-method}{%
+\section{Description of the method}\label{description-of-the-method}}
+
+\hypertarget{description-of-the-data}{%
+\section{Description of the data}\label{description-of-the-data}}
+
+\hypertarget{results}{%
+\section{Results}\label{results}}
+
+\renewcommand\refname{Discussion}
+  \bibliography{diss.bib,extra.bib}
+
+\end{document}
