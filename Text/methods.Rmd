@@ -264,7 +264,7 @@ Denote a sample of size $n$ a $\symbfit{T} = (T_i, \dots, T_n)$ of $f_{pop}(t)$ 
 l(\symbfit{\lambda},\symbfit{u},z\mid \symbfit{t}) = \prod_{i=1}^{n_u}h_{pop}(t_i)\prod_{i=1}^n e^{-H_{pop}(t_i)},
 \end{align}
 
-which can be expressed as
+then,
 
 \[
 l(\symbfit{\lambda},\symbfit{u},z\mid \symbfit{t}) = \prod_{i=1}^{\infty}{\lambda_k I(k\leq z)}^{r_k}e^{-I(k\leq z) m_k \lambda_k}
@@ -299,13 +299,13 @@ f(z\mid \symbfit{\lambda}, t) \propto f(z)\exp  \left \{ -\sum_{k=1}^\infty m_k 
 
 The likelihood in \eqref{lik} imposes a bound on the possible values of $z$. The likelihood is zero for all values of $z$ where there is a $k>z$ such that $r_k \neq0$. Then the conditional distribution is different from zero only if $k^* \leq z$, where $k^*$ is the maximum value of $k$ in which the interval $(\tau_{k-1}, \tau_k]$ has at least one exact observation.
 
-The $z$ parameter has an important function in the model. In particular, $z$ determines the level $\tau_z$, if a patient survives that moment, the patient is considered cured of that disease. Previously $z \sim Po^+ (\mu)$ and in order to make later inferences about $\mu$, a hierarchical model is taken assigning a hyper prior distribution for $\mu$. If we take $\mu \sim Ga(a_0, b_0)$, then the subsequent conditional distribution of $\mu$ only depends on the value of $z$.
+The $z$ parameter has an essential function in the model. In particular, $z$ determines the level $\tau_z$; if a patient survives that moment, the model considers the patient as cured of that disease. Previously $z \sim Po^+ (\mu)$ and in order to make later inferences about $\mu$, we consider a hierarchical model, assigning a hyper prior distribution for $\mu$. If we take $\mu \sim Ga(a_0, b_0)$, then the subsequent conditional distribution of $\mu$ only depends on the value of $z$.
 
 \[
 f(\mu\mid z)= Ga(\mu\mid a_0+z-1,b_0+1)
 \]
 
-The value for $c_k$ can be specified by a constant or more flexibility can be introduced in the previous process $\{\lambda_k\}$, we can incorporate a hyper previous process for $\{c_k \}$ such as $c_k \sim Ga(1, \epsilon)$ with $\epsilon$ fixed or $\epsilon \sim Ga(a_0, b_0)$. If the user has any idea of how strong the relationship between risks is, they can incorporate this information by selecting a fixed value of $\epsilon$, otherwise $\epsilon$ is a range distributed to explore the level of relationship between risks. through the model.
+The value for $c_k$ can be specified by a constant or more flexibility can be introduced in the previous process $\{\lambda_k\}$, we can incorporate a hyper previous process for $\{c_k \}$ such as $c_k \sim Ga(1, \epsilon)$ with $\epsilon$ fixed or $\epsilon \sim Ga(a_0, b_0)$. If the user has any idea of how strong the relationship between risks is, they can incorporate this information by selecting a fixed value of $\epsilon$. Otherwise, $\epsilon$ is a range distributed to explore the level of relationship between risks, through the model.
 
 The full posterior conditional distribution extends to:
 
@@ -326,7 +326,7 @@ p(c_k^*,c_k^{(r)}) = min\left \{ \frac{w(c_k^*)}{w(c_k^{(r)})},1\right \}
 
 with $w(c_k)=(\beta_{k+1}+c_k)^{\alpha_{k+1}+u_k^{(r)}}$.
 
-In the implementation we found a failure because the acceptance rate is desirable to be between 20\% and 40\% [@robert2010introducing] and the user did not have the possibility to manipulate the parameters of the auxiliary distribution proposed in the article that directly affect the acceptance rate. We note that increasing the coefficient of variation of the proposed distribution will decrease the acceptance rate and it will take longer for the algorithm to characterize the desired distribution, if it decreases the coefficient of variation it will increase the acceptance rate, in an extreme case it will cost the algorithm characterize the distribution in your domain.
+In the implementation, we found a failure because the acceptance rate is desirable to be between 20\% and 40\% [@robert2010introducing] and the user could not manipulate the parameters of the auxiliary distribution proposed in the article that directly affect the acceptance rate. We note that increasing the coefficient of variation of the proposed distribution will decrease the acceptance rate and it will take longer for the algorithm to characterize the desired distribution, if it decreases the coefficient of variation it will increase the acceptance rate, in an extreme case it will cost the algorithm characterize the distribution in the domain.
 
 An auxiliary distribution is proposed $c_k^*\sim Ga(\nu, \frac {\nu} {c_k})$ where $\nu$ acts as an adjustment parameter since the coefficient of variation is $cv = \frac{E[c_k^*]} {\sqrt {Var (c_k^*)}} = \frac{c_k} {\sqrt {\frac {c_k^2} {\nu}}} = \frac {1}{\sqrt \nu}$. And now $w(c_k^*, c_k)$ is defined as follows
 
@@ -338,15 +338,15 @@ Finally we can estimate $\tau_z$ with $\tau_{\hat{z}}$, where $\hat{z}$ is the p
 
 ## Cure model with information on covariates \ label {cap: mod_mh}
 
-In both the standard model and the proportional hazards rates with cure rate, the covariates can be incorporated by modeling $\pi$ or $\theta$ as a function of the covariates. For the mix model, @Kuk1992 modeled $\pi$ with a logistic regression that has the drawback of not having proportional hazard rates built for the entire population. For the model with proportional risk rates with cure rate, @Kuk1992 proposed that the covariates be incorporated into the model through the parameter $\theta$ to obtain proportional risk rates for the entire population.
+thIn both the standard model and the proportional hazards rates with cure rate, the covariates can be incorporated by modelling $\pi$ or $\theta$ as a function of the covariates. For the mixed model, @Kuk1992 modelled $\pi$ with a logistic regression that has the drawback of not having proportional hazard rates built for the entire population. For the model with proportional risk rates with cure rate, @Kuk1992 proposed that the covariates be incorporated into the model through the parameter $\theta$ to obtain proportional risk rates for the entire population.
 
-To conduct an analysis with covariates, @Nieto-Barajas2008 proposes a semi-parametric model that is similar to the @Cox1972 proportional hazards model. The base risk is modeled by \eqref{apriori} to explicitly impose the cure fraction and the cure dimension. Additionally, the model has flexibility so that each individual can have a different dependent cure time of $z_i$. For the individual $i$ with a vector of covariates of size $p$ that possibly depends on time, $\symbfit{x}_i(t)$, they propose that the risk function be of the form
+@Nieto-Barajas2008 propose a semi-parametric model that is similar to the @Cox1972 proportional hazards model to analyze with covariates. The base risk is modelled by \eqref{apriori} to impose the cure fraction and the cure dimension explicitly. Additionally, the model has flexibility so that each individual can have a different dependent cure time of $z_i$. For the individual $i$ with a vector of covariates of size $p$ that possibly depends on time, $\symbfit{x}_i(t)$, they propose that the risk function is of the form.
 
 \begin{align}\label{nieto}
 h_i(t\mid\symbfit{x}_i,z_i)=h(t\mid z_i)e^{\theta'\symbfit{x}_i(t)},
 \end{align}
 
-where $\theta$ is a vector of regression parameters and $h(t \mid z_i)$ is the base risk function. @Nieto-Barajas2008 assigns $h(t \mid z_i)$ a nonparametric mixture as initial distribution that is capable of modeling the cure fraction and the cure time
+where $\theta$ is a vector of regression parameters and $h(t \mid z_i)$ is the base risk function. @Nieto-Barajas2008 assigns $h(t \mid z_i)$ a nonparametric mixture as the initial distribution that is capable of modelling the cure fraction and the cure time
 
 \begin{align}\label{semiparametrico}
 h(t\mid z_i) = \sum_{k=1}^\infty \lambda_k I(k \leq z_i) I(\tau_{k-1}<t\leq \tau_k),
@@ -354,7 +354,7 @@ h(t\mid z_i) = \sum_{k=1}^\infty \lambda_k I(k \leq z_i) I(\tau_{k-1}<t\leq \tau
 
 where {$\lambda_k $} is a Markov gamma process common to all individuals and $z_i$ is the cure height for each individual $i$. The initial nonparametric distribution $h(t \ mid z_i)$, described in \eqref{semiparametric}, allows a patient to be considered at risk before time $\tau_{z_i}$ and is considered cured if the patient survives after of time $\tau_{z_i}$.
  
-The \eqref{grandson} model is not a proportional risk rate model because there are different cure times indexed by $z_i$. This characteristic allows to estimate the cure time for each individual by assigning a previous function $f(z_i)$ dependent on the covariates.
+The \eqref{grandson} model is not a proportional risk rate model because there are different cure times indexed by $z_i$. This characteristic allows estimating the cure time for each individual by assigning a previous function $f(z_i)$ dependent on the covariates.
 
 \[
 z_i \sim Po^+(e^{\delta' \symbfit{y}_i})
@@ -388,7 +388,7 @@ l(\symbfit{\lambda},\symbfit{u},\symbfit{z},\theta \mid x) =& \left \{ \prod_{i=
 \end{split}
 \end{equation*}
 
-which can be re-expressed as follows
+it is easier to express it as follows
 
 \begin{equation*}
 \begin{split}
@@ -408,7 +408,7 @@ and
 m_k(\theta,\symbfit{z}) = \sum_{i=1}^n I(k \leq z_i)w_{ki}(t_i,\symbfit{x}_i,\theta)
 \]
 
-You can obtain the complete conditional posterior distributions that are necessary for the implementation of a Gibbs sampler. The complete conditional distributions for $\lambda_k$ and $u_k$ are given in a similar way to the nonparametric case with no covariates.
+It is easy to obtain the complete conditional posterior distributions that are necessary for the implementation of a Gibbs sampler. The complete conditional distributions for $\lambda_k$ and $u_k$ are similar to the nonparametric case with no covariates.
 
 \begin{equation*} \begin{split}
 f(\lambda_k\mid \theta,\symbfit{\lambda}_{(-k)},\symbfit{u},x)= Ga(\lambda_k \mid &\alpha_k + u_{k-1} + u_k + r_k, \\ & \beta_k+c_{k-1}+c_k+m_k(\theta,\symbfit{z}))
@@ -420,7 +420,7 @@ with $c_0 = 0$ and $u_0 = 0$ with probability 1,
 f(u_k \mid \theta, \symbfit{\lambda}, \symbfit{u}_{(-k)}\symbfit{z},x) = f(u_k \mid \lambda, \symbfit{u}_{(-k)})
 \]
 
-given in the equation \eqref{usc}. The complete conditional distribution of $z_i$ is
+Given in the equation \eqref{usc}. The complete conditional distribution of $z_i$ is
 
 \begin{equation*}
 \begin{split}
@@ -434,13 +434,13 @@ Note that the likelihood imposes a lower bound $k_i$ for $z_i$ which is the inte
 f(\theta \mid \symbfit{\lambda}, \symbfit{z}, data) \propto f(\theta) \exp\left \{ \sum_{i=1}^{n_u}\theta'\symbfit{x}_i(t_i) - \sum_{k=1}^\infty m_k(\theta, \symbfit{z})\lambda_k\right\}
 \]
 
-Finally @Nieto-Barajas2008, assign an initial hyper distribution $f(\delta)$ for the vector of coefficients $\symbfit {\delta}$ so that the data helps determine the effects of the covariates on the cure threshold. So the full conditional distribution of $\symbfit{\delta}$ only depends on the cure threshold index $z_i$ given by
+Finally, @Nieto-Barajas2008, assign an initial hyper distribution $f(\delta)$ for the vector of coefficients $\symbfit {\delta}$ so that the data helps determine the effects of the covariates on the cure threshold. So the full conditional distribution of $\symbfit{\delta}$ only depends on the cure threshold index $z_i$ given by
 
 \[
 f(\symbfit{\delta}\mid \symbfit{z}) \propto f(\symbfit{\delta}) \exp\left \{ \sum_{i=1}^n(\symbfit{\delta}'\symbfit{y}_i(z_i-1)-e^{\symbfit{\delta}'\symbfit{y}_i})\right\}
 \]
 
-As in the case without covariates, the cure time $\tau_{z_i}$ can be estimated by $\tau_{\hat{z}_i}$, where $\hat{z}_i$ is the median for being discrete in nature or, if conservative, a higher quantile of the posterior distribution of $z_i$.
+Like the case without covariates, the cure time $\tau_{z_i}$ can be estimated by $\tau_{\hat{z}_i}$, where $\hat{z}_i$ is the median for being discrete or, if conservative, a higher quantile of the posterior distribution of $z_i$.
 
 Simulations of the subsequent conditional distributions of $\symbfit {\lambda}$, $\symbfit {u}$, and $\symbfit{z}$ are fairly straightforward. However, to simulate $\theta_s$ and $\delta_j$ the Metropolis-Hastings algorithm described below is implemented:
 

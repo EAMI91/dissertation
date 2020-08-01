@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.6.4)  1 AUG 2020 12:31
+This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.6.4)  1 AUG 2020 12:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -833,25 +833,25 @@ LaTeX Warning: Reference `fig: comparativo' on page 3 undefined on input line 1
 [3] [4] [5] [6] [7]
 Missing character: There is no 𝜆 in font [lmroman10-regular]:mapping=tex-text;!
 
-LaTeX Warning: Reference `semiparametric' on page 8 undefined on input line 599
+LaTeX Warning: Reference `semiparametric' on page 8 undefined on input line 600
 .
 
 [8]
 
-LaTeX Warning: Reference `grandson' on page 9 undefined on input line 603.
+LaTeX Warning: Reference `grandson' on page 9 undefined on input line 604.
 
 [9] [10]
 
 LaTeX Warning: Reference `semiparametric' on page 11 undefined on input line 74
-8.
+9.
 
 (./methods.bbl [11])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 774.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 775.
 [12]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 774.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 775.
 (./methods.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 774.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 774.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 775.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 775.
 Package rerunfilecheck Info: File `methods.out' has not changed.
 (rerunfilecheck)             Checksum: 5F3184783C4B64595FDB03BC03DB85AA;1148.
 
