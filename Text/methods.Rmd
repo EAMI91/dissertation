@@ -4,10 +4,15 @@ author: "Emilio Akira Morones Ishikawa"
 date: "7/22/2020"
 output:
   pdf_document:
+    latex_engine: xelatex
     citation_package: natbib
 bibliography: [diss.bib, extra.bib]
 header-includes:
    - \usepackage{physics}
+   - \usepackage{bm}  
+   - \usepackage{enumitem}
+   - \usepackage[section]{placeins}
+   - \usepackage{amsmath}
    - \usepackage{float}
 ---
 
@@ -215,11 +220,274 @@ Since $\lambda_k = 0$ when $k> z$ and, by definition, the risk is null when the 
 
 A pre-distribution is specified for $z$, supported at $\{1,2, \dots \}$. The natural option is to consider a positive Poisson distribution, $z \sim Po^+ (\mu)$, for $\mu> 0$, i.e. $x-1 \sim Po (\mu)$. Although all the paths of the previous risk function, $h_{pop}(t)$, are piecemeal constant, the paths of the corresponding cumulative risk function, $H_{pop} (t)$, are continue with probability 1. So, the nonparametric previous, $S_{pop} (t) = e^{- H_{pop} (t)}$, assigns a positive probability for the set of continuous survival functions, this allows a finite healing time.
 
-# Posterior analisis
+# Posterior analysis
 
+Let's say $h_{pop}(t)$ is the risk function as in \eqref{apriori}. Then the cumulative risk function $ H_{pop}(t)$ has the form
 
+\[
+H_{pop}(t_i) = \sum_{k=1}^\infty \lambda_k I(k\leq z) w_{ki},
+\]
+
+where
+
+\begin{align} \label{w}
+ w_{ki}= \left \{
+\begin{array}{lr}
+\tau_k-\tau_{k-1}, & t_i >\tau_k \\
+t_i-\tau_{k-1}, & t_i \in (\tau_{k-1}, \tau_k ] \\
+0, & \mbox{en otro caso}
+\end{array}
+\right .
+\end{align}
+
+The density function of the total population defined as $f_{pop}(t_i) = h_{pop}(t_i) e^{-H_{pop}(t_i)}$ is derived as follows. Let us define $\symbfit{\lambda} = \{\lambda_k, k = 1 \dots K \}$ and $\symbfit{u} = \{u_k, k = 1 \dots K \}$, then define $\symbfit{\lambda}_{(- k)} = \{\lambda_k, k = 1, \dots, k-1, k + 1, \dots, K \}$ and $\symbfit{u}_{(-k)} \{u_k, k = 1, \dots, k-1, k + 1, \dots, K \}$, that is, removing the k-th component. The previous joint distribution of $(\symbfit {\lambda}, \symbfit{u}, z)$ is written as follows because $z$ is independent of the gamma process
+
+\[
+f(\symbfit{\lambda},\symbfit{u},z) = f(\symbfit{\lambda},\symbfit{u})f(z)
+\]
+
+with
+
+\[
+f(\symbfit{\lambda},\symbfit{u}) = Ga(\lambda_1\mid \alpha_1, \beta_1) \prod_{k = 1}^\infty Po(u_k\mid c_k\lambda_k)Ga(\lambda_{k+1}\mid\alpha_{k+1}+u_k, \beta_{k+1}+c_k)
+\]
+
+and
+
+\[
+f(z) = Po^+(x\mid \mu)
+\]
+
+Denote a sample of size $n$ a $\symbfit{T} = (T_i, \dots, T_n)$ of $f_{pop}(t)$ with observations censored to the right. Without loss of generality, you can define $(T_1, \dots, T_{n_u})$ as exact observations and $(T_{n_u + 1}, \dots, T_n)$ as the observations censored to the right. So the likelihood function of $(\symbfit{\lambda}, \symbfit{u}, z)$ is
+
+\begin{align} \label{lik}
+l(\symbfit{\lambda},\symbfit{u},z\mid \symbfit{t}) = \prod_{i=1}^{n_u}h_{pop}(t_i)\prod_{i=1}^n e^{-H_{pop}(t_i)},
+\end{align}
+
+which can be expressed as
+
+\[
+l(\symbfit{\lambda},\symbfit{u},z\mid \symbfit{t}) = \prod_{i=1}^{\infty}{\lambda_k I(k\leq z)}^{r_k}e^{-I(k\leq z) m_k \lambda_k}
+\]
+
+where
+
+\[
+r_k=\sum_{j=1}^{n_u}I(\tau_{k-1} < t_j \leq \tau_k) \quad
+m_k=\sum_{i=1}^n w_{ki}
+\]
+
+with $w_{ki}$ given in \eqref{w}
+
+The complete conditional posterior distribution for $\lambda_k$ is
+
+\begin{equation*} \begin{split}
+f(\lambda_k \mid \symbfit{\lambda_{(-k)}}, \symbfit{u}, z, \symbfit{t}) = Ga(\lambda_k \mid &\alpha_k + u_{k-1} + u_k + r_k, \\ & \beta_k + c_{k-1} + c_k + m_kI(k\leq z))
+\end{split} \end{equation*}
+
+with $c_0 = 0$ and $u_0 = 0$. The latent variable $\symbfit{u}$ does not appear in the likelihood, so the conditional posterior distribution is equal to the conditional prior distribution
+
+\begin{align}\label{usc}
+f(u_k \mid \symbfit{\lambda}, \symbfit{u}_{(-k)}) \propto & \frac{1}{\Gamma(1+u_k)\Gamma(\alpha_{k+1} + u_k)} \\ & \{c_k(\beta_{k+1} + c_k)\lambda_k\lambda_{k+1}\}^{u_k}\symbfit{I}_{\{0,1,\dots\}}(u_k)
+\end{align}
+
+and
+
+\[
+f(z\mid \symbfit{\lambda}, t) \propto f(z)\exp  \left \{ -\sum_{k=1}^\infty m_k I(k \leq z) \lambda_k \right \} I(k^* \leq z)
+\]
+
+The likelihood in \eqref{lik} imposes a bound on the possible values of $z$. The likelihood is zero for all values of $z$ where there is a $k>z$ such that $r_k \neq0$. Then the conditional distribution is different from zero only if $k^* \leq z$, where $k^*$ is the maximum value of $k$ in which the interval $(\tau_{k-1}, \tau_k]$ has at least one exact observation.
+
+The $z$ parameter has an important function in the model. In particular, $z$ determines the level $\tau_z$, if a patient survives that moment, the patient is considered cured of that disease. Previously $z \sim Po^+ (\mu)$ and in order to make later inferences about $\mu$, a hierarchical model is taken assigning a hyper prior distribution for $\mu$. If we take $\mu \sim Ga(a_0, b_0)$, then the subsequent conditional distribution of $\mu$ only depends on the value of $z$.
+
+\[
+f(\mu\mid z)= Ga(\mu\mid a_0+z-1,b_0+1)
+\]
+
+The value for $c_k$ can be specified by a constant or more flexibility can be introduced in the previous process $\{\lambda_k\}$, we can incorporate a hyper previous process for $\{c_k \}$ such as $c_k \sim Ga(1, \epsilon)$ with $\epsilon$ fixed or $\epsilon \sim Ga(a_0, b_0)$. If the user has any idea of how strong the relationship between risks is, they can incorporate this information by selecting a fixed value of $\epsilon$, otherwise $\epsilon$ is a range distributed to explore the level of relationship between risks. through the model.
+
+The full posterior conditional distribution extends to:
+
+\begin{align}\label{ckas}
+f(c_k \mid u_k,\lambda_k,\lambda_{k+1}) \propto & (\beta_{k+1} + c_k)^{(\alpha_{k+1} + u_k)}c_k^{u_k} \\ &
+\times \exp \bigg \{ -c_k \bigg ( \lambda_{k+1} + \lambda_k + \epsilon \bigg) \bigg\} 
+\end{align}
+
+In the hierarchical specification, the distribution for $\epsilon$ is defined as $f(\epsilon \mid c_1, \dots, c_{K-1}) = Ga \bigg(a_0 + K, b_0 + \sum_k c_k^{(r)} \bigg)$
+
+where $c^{(r)}_k$ is the correlation between $\lambda_k$ and $\lambda_{k + 1}$ for the iteration $r$.
+
+Simulating this distribution is not easy. A hybrid algorithm must be constructed using a Metropolis-Hastings scheme. The idea is to simulate a value of an auxiliary distribution ($c_k^*$), in the original document [@Nieto-Barajas2002a] they use $Ga \left( u_k +1, \lambda_{k + 1} + \lambda_k + \frac{1}{\epsilon} \right)$, with probability $p(c_k^*, c_k^{(r + 1)})$ accepts the simulated value, $c_k^{(r + 1)} = c_k^*$ and with probability $1-p (c_k^*, c_k^{(r + 1)})$ rejects it, $c_k^{(r + 1)} = c_k^{(r)}$, where
+
+\[
+p(c_k^*,c_k^{(r)}) = min\left \{ \frac{w(c_k^*)}{w(c_k^{(r)})},1\right \}
+\]
+
+with $w(c_k)=(\beta_{k+1}+c_k)^{\alpha_{k+1}+u_k^{(r)}}$.
+
+In the implementation we found a failure because the acceptance rate is desirable to be between 20\% and 40\% [@robert2010introducing] and the user did not have the possibility to manipulate the parameters of the auxiliary distribution proposed in the article that directly affect the acceptance rate. We note that increasing the coefficient of variation of the proposed distribution will decrease the acceptance rate and it will take longer for the algorithm to characterize the desired distribution, if it decreases the coefficient of variation it will increase the acceptance rate, in an extreme case it will cost the algorithm characterize the distribution in your domain.
+
+An auxiliary distribution is proposed $c_k^*\sim Ga(\nu, \frac {\nu} {c_k})$ where $\nu$ acts as an adjustment parameter since the coefficient of variation is $cv = \frac{E[c_k^*]} {\sqrt {Var (c_k^*)}} = \frac{c_k} {\sqrt {\frac {c_k^2} {\nu}}} = \frac {1}{\sqrt \nu}$. And now $w(c_k^*, c_k)$ is defined as follows
+
+\[
+w(c_k^*\mid c_k) = f(c_k^* \mid u_k,\lambda_k,\lambda_{k+1}) Ga(c_k\mid \nu, \frac{\nu}{c_k^*})
+\]
+
+Finally we can estimate $\tau_z$ with $\tau_{\hat{z}}$, where $\hat{z}$ is the posterior median since it takes discrete values or, if conservative, some larger quantile of the distribution posterior of $z$, that is, $\hat{z}$ is the smallest value $s$ in which $Pr(z \leq s) \geq 1- \alpha$ with $\alpha \leq 0.5$ . For subsequent inferences a Gibbs sampler must be implemented.
+
+## Cure model with information on covariates \ label {cap: mod_mh}
+
+In both the standard model and the proportional hazards rates with cure rate, the covariates can be incorporated by modeling $\pi$ or $\theta$ as a function of the covariates. For the mix model, @Kuk1992 modeled $\pi$ with a logistic regression that has the drawback of not having proportional hazard rates built for the entire population. For the model with proportional risk rates with cure rate, @Kuk1992 proposed that the covariates be incorporated into the model through the parameter $\theta$ to obtain proportional risk rates for the entire population.
+
+To conduct an analysis with covariates, @Nieto-Barajas2008 proposes a semi-parametric model that is similar to the @Cox1972 proportional hazards model. The base risk is modeled by \eqref{apriori} to explicitly impose the cure fraction and the cure dimension. Additionally, the model has flexibility so that each individual can have a different dependent cure time of $z_i$. For the individual $i$ with a vector of covariates of size $p$ that possibly depends on time, $\symbfit{x}_i(t)$, they propose that the risk function be of the form
+
+\begin{align}\label{nieto}
+h_i(t\mid\symbfit{x}_i,z_i)=h(t\mid z_i)e^{\theta'\symbfit{x}_i(t)},
+\end{align}
+
+where $\theta$ is a vector of regression parameters and $h(t \mid z_i)$ is the base risk function. @Nieto-Barajas2008 assigns $h(t \mid z_i)$ a nonparametric mixture as initial distribution that is capable of modeling the cure fraction and the cure time
+
+\begin{align}\label{semiparametrico}
+h(t\mid z_i) = \sum_{k=1}^\infty \lambda_k I(k \leq z_i) I(\tau_{k-1}<t\leq \tau_k),
+\end{align}
+
+where {$\lambda_k $} is a Markov gamma process common to all individuals and $z_i$ is the cure height for each individual $i$. The initial nonparametric distribution $h(t \ mid z_i)$, described in \eqref{semiparametric}, allows a patient to be considered at risk before time $\tau_{z_i}$ and is considered cured if the patient survives after of time $\tau_{z_i}$.
+ 
+The \eqref{grandson} model is not a proportional risk rate model because there are different cure times indexed by $z_i$. This characteristic allows to estimate the cure time for each individual by assigning a previous function $f(z_i)$ dependent on the covariates.
+
+\[
+z_i \sim Po^+(e^{\delta' \symbfit{y}_i})
+\]
+
+where $\symbfit{\delta}$ is a vector of unknown coefficients and $\symbfit{y}_i$ is a vector of dimension $q$ of covariates. Note that $\symbfit{x}_i$ and $\symbfit{y}_i$ could have covariates in common.
+
+The cumulative function of risk is
+
+\[
+H_i(t\mid \symbfit{x}_i,z_i) = \sum_{k=1}^\infty \lambda_k I(k\leq z_i)w_{ki}(\symbfit{t},\symbfit{x}_i,\symbfit{\theta}),
+\]
+
+where
+
+\[
+w_{ki}(\symbfit{t},\symbfit{x}_i,\symbfit{\theta}) = \left \{
+\begin{array}{lr}
+\int_{\tau_{k-1}}^{\tau_k}\exp\{\theta'\symbfit{x}_i(s)\}ds, & t>\tau_k \\
+\int_{\tau_{k-1}}^{t}\exp\{\theta'\symbfit{x}_i(s)\}ds, &  t \in (\tau_{k-1},\tau_k] \\
+0, & \mbox{en otro caso}
+\end{array}
+\right.
+\]
+
+Given a sample of size $n$, let $n_u$ be the number of failures, i.e. ($T_1, \dots, T_{n_u}$) are times of observed events and ($ T_{n_{u + 1}}, \dots, T_n$) are observations censored from the right. The likelihood function is
+
+\begin{equation*}
+\begin{split}
+l(\symbfit{\lambda},\symbfit{u},\symbfit{z},\theta \mid x) =& \left \{ \prod_{i=1}^{n_u} h_i(t_i \mid \symbfit{x}_i,z_i) \right \} \\& \times \left \{  \prod_{i=1}^n e^{-H_i(t_i \mid \symbfit{x}_i,z_i)}\right \}
+\end{split}
+\end{equation*}
+
+which can be re-expressed as follows
+
+\begin{equation*}
+\begin{split}
+l(\symbfit{\lambda},\symbfit{u},\symbfit{z},\theta \mid x) = &\exp \left \{ \sum_{i=1}^{n_u} \theta' \symbfit{x}_i(t_i)\right \} \\ & \times \prod_{k=1}^\infty \left [ \lambda_k^{r_k} e^{-m_k(\theta,\symbfit{z})\lambda_k} \prod_{i=1}^{n_u} I(k \leq z_i)^{I(\tau_{k-1} < t_i \leq \tau_k)}\right]
+\end{split}
+\end{equation*}
+
+where $x$ is the data,
+
+\[
+r_k=\sum_{i=1}^{n_u}I(\tau_{k-1} < t_i \leq \tau_k)
+\]
+
+and
+
+\[
+m_k(\theta,\symbfit{z}) = \sum_{i=1}^n I(k \leq z_i)w_{ki}(t_i,\symbfit{x}_i,\theta)
+\]
+
+You can obtain the complete conditional posterior distributions that are necessary for the implementation of a Gibbs sampler. The complete conditional distributions for $\lambda_k$ and $u_k$ are given in a similar way to the nonparametric case with no covariates.
+
+\begin{equation*} \begin{split}
+f(\lambda_k\mid \theta,\symbfit{\lambda}_{(-k)},\symbfit{u},x)= Ga(\lambda_k \mid &\alpha_k + u_{k-1} + u_k + r_k, \\ & \beta_k+c_{k-1}+c_k+m_k(\theta,\symbfit{z}))
+\end{split} \end{equation*}
+
+with $c_0 = 0$ and $u_0 = 0$ with probability 1,
+
+\[
+f(u_k \mid \theta, \symbfit{\lambda}, \symbfit{u}_{(-k)}\symbfit{z},x) = f(u_k \mid \lambda, \symbfit{u}_{(-k)})
+\]
+
+given in the equation \eqref{usc}. The complete conditional distribution of $z_i$ is
+
+\begin{equation*}
+\begin{split}
+f(z_i \mid \symbfit{\delta}, \symbfit{\theta},\symbfit{\lambda},x) \propto & \exp \left \{-\sum_{k=1}^\infty \lambda_k I(k \leq z_i)w_{ki}(t_i,\symbfit{x}_i,\theta) \right\} \\ & \times Po^+(z_i \mid e^{\delta' \symbfit{y}_i})I(k_i \leq z_i)
+\end{split}
+\end{equation*}
+
+Note that the likelihood imposes a lower bound $k_i$ for $z_i$ which is the interval where the observation $t_i$ occurs. If $t_i$ is a censored observation then there is no lower bound, so $k_i = 1$. Let $f(\theta)$ be the previous distribution for $\theta$, then
+
+\[
+f(\theta \mid \symbfit{\lambda}, \symbfit{z}, data) \propto f(\theta) \exp\left \{ \sum_{i=1}^{n_u}\theta'\symbfit{x}_i(t_i) - \sum_{k=1}^\infty m_k(\theta, \symbfit{z})\lambda_k\right\}
+\]
+
+Finally @Nieto-Barajas2008, assign an initial hyper distribution $f(\delta)$ for the vector of coefficients $\symbfit {\delta}$ so that the data helps determine the effects of the covariates on the cure threshold. So the full conditional distribution of $\symbfit{\delta}$ only depends on the cure threshold index $z_i$ given by
+
+\[
+f(\symbfit{\delta}\mid \symbfit{z}) \propto f(\symbfit{\delta}) \exp\left \{ \sum_{i=1}^n(\symbfit{\delta}'\symbfit{y}_i(z_i-1)-e^{\symbfit{\delta}'\symbfit{y}_i})\right\}
+\]
+
+As in the case without covariates, the cure time $\tau_{z_i}$ can be estimated by $\tau_{\hat{z}_i}$, where $\hat{z}_i$ is the median for being discrete in nature or, if conservative, a higher quantile of the posterior distribution of $z_i$.
+
+Simulations of the subsequent conditional distributions of $\symbfit {\lambda}$, $\symbfit {u}$, and $\symbfit{z}$ are fairly straightforward. However, to simulate $\theta_s$ and $\delta_j$ the Metropolis-Hastings algorithm described below is implemented:
+
+\begin{itemize}
+\item M-H steps for $\theta_s$: in iteration $r+1$, simulates $\theta_s^*$ from $N(\theta_s^{(r)},\sigma_{\theta}^2)$ and take $\theta_s^{(r+1)} = \theta_s^*$ with probability $p(\theta_s^*, \theta_s^{(r)})$, or$\theta_s^{(r+1)} = \theta_s^{(r)}$ with probability $1-p(\theta_s^*,\theta_s^{(r)})$, where
+
+\begin{equation*}
+\begin{split}
+p(\theta_s^*,\theta_s^{(r)}) = min \bigg \{ 1, &\frac{f(\theta_s^*)}{f(\theta_s^{(r)})}\exp 
+\bigg[ \sum_{i=1}^{n_u}(\theta_s^*-\theta_s^{(r)})x_{si}(t_i) \\ &
++ \sum_{k=1}^{\infty}\{m_k(\theta^{(r)},\symbfit{z}) - 
+m_k(\theta^*,\symbfit{z})\}\lambda_k \bigg] 
+\bigg\}
+\end{split}
+\end{equation*}
+
+With $\symbfit{\theta^*}=(\theta_1^{(r+1)},\dots ,\theta_{s-1}^{(r+1)},\theta_s^*,\theta_{s+1}^{(r)},\dots)$.
+
+\item M-H steps for $\delta_j$: in iteration $r+1$, simulates $\delta_j^*$ from $N(\delta_j^{(r)},\sigma_\delta^2)$ and take $\delta_j^{(r+1)} = \delta_j^*$ with probability $q(\delta_j^*, \delta_j^{(r)})$, or $\delta_j^{(r+1)} = \delta_j^{(r)}$ with probability $1-q(\delta_j^*,\delta_j^{(r)})$, where
+
+\begin{equation*}
+\begin{split}
+q(\delta_j^*,\delta_j^{(r)}) = min \bigg \{ 1, & \frac{f(\delta_j^*)}{f(\delta_j^{(r)})} \\ & \times \exp 
+\bigg[ \sum_{i=1}^{n}(\delta_j^*-\delta_j^{(r)})y_{ji}(z_i-1) -  \\ & (e^{\delta^{*'\symbfit{y}_i}} -  e^{\delta^{(r)'}\symbfit{y}_i}) \bigg] 
+\bigg\}
+\end{split}
+\end{equation*}
+
+With $\symbfit{\delta^*}=(\delta_1^{(r+1)},\dots ,\delta_{j-1}^{(r+1)},\delta_j^*,\delta_{j+1}^{(r)},\dots)$.
+
+\end{itemize}
+
+Based on the semiparametric model \eqref{semiparametric}, the probability of not experiencing failure for an individual with covariates $\symbfit{x}_i(t)$ and cure threshold $z_i$ is given by
+
+\[
+\pi_i=\lim \limits_{t \to \infty} S_i(t \mid \symbfit{x}_i,z_i)
+\]
+
+or more precisely
+
+\[
+\pi_i = \exp \left \{ -\sum_{k=1}^{z_i} \lambda_k \int_{\tau_{k-1}}^{\tau_k} e^{\symbfit{\theta}'\symbfit{x}_i(s)}ds\right\}.
+\]
 
 # Description of the method
+
+
 
 # Description of the data
 
