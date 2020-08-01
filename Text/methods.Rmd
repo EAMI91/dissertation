@@ -115,7 +115,7 @@ tibble(x=seq(0,15,by = .01),y=h_x(x = seq(0,15,by = .01), lambda = 0.00208, alph
   theme_minimal() + ylab("Hazard") + xlab("x")
 ```
 
-In Figure \ref{fig: comparativo}, the solid black line represents the Weibull risk function for $\lambda = 0.00208$ and $\alpha = 3$. The solid red line represents the Weibull risk function with the cure rate of \citet{Hoang1996a} with the same parameters. It implies that from a point in time, the risk rate decreases until it reaches zero.
+In Figure \ref{fig:comparativo}, the solid black line represents the Weibull risk function for $\lambda = 0.00208$ and $\alpha = 3$. The solid red line represents the Weibull risk function with the cure rate of \citet{Hoang1996a} with the same parameters. It implies that from a point in time, the risk rate decreases until it reaches zero.
 
 The semi-parametric model of the cure rate usually focuses on modeling the risk rate function $h (t)$ of the group that is not cured, corresponding to $S (t)$ in the equation \eqref{mixS} and $F(t)$ in \eqref{supalter}. \citet{Tsodikov2003a} proposed a piecewise constant risk function in the model for uncured individuals,
 
@@ -348,13 +348,13 @@ h_i(t\mid\symbfit{x}_i,z_i)=h(t\mid z_i)e^{\theta'\symbfit{x}_i(t)},
 
 where $\theta$ is a vector of regression parameters and $h(t \mid z_i)$ is the base risk function. @Nieto-Barajas2008 assigns $h(t \mid z_i)$ a nonparametric mixture as the initial distribution that is capable of modelling the cure fraction and the cure time
 
-\begin{align}\label{semiparametrico}
+\begin{align}\label{semiparametric}
 h(t\mid z_i) = \sum_{k=1}^\infty \lambda_k I(k \leq z_i) I(\tau_{k-1}<t\leq \tau_k),
 \end{align}
 
-where {$\lambda_k $} is a Markov gamma process common to all individuals and $z_i$ is the cure height for each individual $i$. The initial nonparametric distribution $h(t \ mid z_i)$, described in \eqref{semiparametric}, allows a patient to be considered at risk before time $\tau_{z_i}$ and is considered cured if the patient survives after of time $\tau_{z_i}$.
+where {$\lambda_k$} is a Markov gamma process common to all individuals and $z_i$ is the cure height for each individual $i$. The initial nonparametric distribution $h(t \mid z_i)$, described in \eqref{semiparametric}, allows a patient to be considered at risk before time $\tau_{z_i}$ and is considered cured if the patient survives after of time $\tau_{z_i}$.
  
-The \eqref{grandson} model is not a proportional risk rate model because there are different cure times indexed by $z_i$. This characteristic allows estimating the cure time for each individual by assigning a previous function $f(z_i)$ dependent on the covariates.
+The \eqref{nieto} model is not a proportional risk rate model because there are different cure times indexed by $z_i$. This characteristic allows estimating the cure time for each individual by assigning a previous function $f(z_i)$ dependent on the covariates.
 
 \[
 z_i \sim Po^+(e^{\delta' \symbfit{y}_i})
