@@ -193,7 +193,7 @@ Therefore it is reduced to the independent exponential model by intervals.
 
 It is convenient to add a dependency process between the risk rates of consecutive intervals to reduce the possibility of abrupt changes in the estimate.
 
-To consider greater dependency on the $\{\lambda_k\} $ process, we take the Markov gamma process proposed by @ Nieto-Barajas2002a for the $\lambda_k$ 's. The Markov gamma process definition is through a latent process $\{u_k\}$ as follows. The steps are the following.
+To consider greater dependency on the $\{\lambda_k\}$ process, we take the Markov gamma process proposed by @ Nieto-Barajas2002a for the $\lambda_k$ 's. The Markov gamma process definition is through a latent process $\{u_k\}$ as follows. The steps are the following.
 
 \begin{enumerate}
 \item $\lambda_1 \sim Ga(\alpha_1,\beta_1)$
